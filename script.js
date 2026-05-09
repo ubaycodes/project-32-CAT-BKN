@@ -1,5 +1,3 @@
-// Ganti semua JavaScript yang ada dengan kode berikut:
-
 // Data soal lengkap dengan kunci jawaban dan penjelasan
 const dataSoal = Array.from({ length: 100 }, (_, i) => ({
   id: i + 1,
