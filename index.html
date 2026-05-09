@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simulasi CAT BKN</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header>
+        <div class="logo">
+          <i>📚</i>
+          <div>
+            <h1>SIMULASI CAT CPNS</h1>
+            <p>Tes Kompetensi Dasar (TKD)</p>
+          </div>
+        </div>
+        <div class="timer-container">
+          <div class="timer-label">⏱️ Sisa Waktu</div>
+          <div class="timer" id="timer">01:30:00</div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="info-peserta">
+            <h3>Informasi Peserta</h3>
+            <div class="info-item">
+              <span class="info-label">Nama</span>
+              <span class="info-value">Peserta CAT</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">No. Peserta</span>
+              <span class="info-value">CPNS2024001</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Sesi</span>
+              <span class="info-value">1 - Pagi</span>
+            </div>
+          </div>
+
+          <div class="navigasi-soal">
+            <h3>Navigasi Soal</h3>
+            <div class="nomor-soal" id="nomorSoal">
+              <!-- Nomor soal akan diisi JavaScript -->
+            </div>
+
+            <div class="legenda">
+              <h4 style="margin-bottom: 10px; color: #666">Keterangan:</h4>
+              <div class="legenda-item">
+                <div class="legenda-color" style="background: #e9ecef"></div>
+                <span>Belum Dijawab</span>
+              </div>
+              <div class="legenda-item">
+                <div class="legenda-color" style="background: #28a745"></div>
+                <span>Sudah Dijawab</span>
+              </div>
+              <div class="legenda-item">
+                <div class="legenda-color" style="background: #ffc107"></div>
+                <span>Ragu-ragu</span>
+              </div>
+              <div class="legenda-item">
+                <div class="legenda-color" style="background: #2a5298"></div>
+                <span>Soal Aktif</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Area Soal -->
+        <section class="area-soal">
+          <div class="soal-header">
+            <span class="kategori">Tes Wawasan Kebangsaan</span>
+            <span class="nomor-soal-active"
+              >Soal No. <span id="nomorSoalAktif">1</span> dari 100</span
+            >
+          </div>
+
+          <div class="teks-soal" id="teksSoal">
+            <p>
+              Pancasila sebagai dasar negara Indonesia memiliki kedudukan yang
+              sangat penting. Sila pertama Pancasila berbunyi...
+            </p>
+          </div>
+
+          <div class="pilihan-jawaban" id="pilihanJawaban">
+            <!-- Pilihan jawaban akan diisi JavaScript -->
+          </div>
+
+          <div class="aksi-soal">
+            <button class="btn btn-sebelumnya" onclick="soalSebelumnya()">
+              ⬅ Sebelumnya
+            </button>
+            <button class="btn btn-ragu" onclick="tandaiRagu()">
+              ❓ Ragu-ragu
+            </button>
+            <button class="btn btn-selanjutnya" onclick="soalSelanjutnya()">
+              Selanjutnya ➡
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer>
+        <p>
+          ⚠️ Jangan menutup browser selama ujian berlangsung | Hubungi pengawas
+          jika terjadi kendala teknis
+        </p>
+        <button
+          class="btn"
+          style="background: #dc3545; color: white; margin-top: 10px"
+          onclick="akhiriUjian()"
+        >
+          Akhiri Ujian
+        </button>
+        <button
+          id="btnLihatHasil"
+          class="btn"
+          style="
+            background: #28a745;
+            color: white;
+            margin-top: 10px;
+            display: none;
+          "
+          onclick="tampilkanHasil()"
+        >
+          📊 Lihat Hasil Ujian
+        </button>
+      </footer>
+
+      <!-- Modal Konfirmasi -->
+      <div class="modal" id="modalKonfirmasi">
+        <div class="modal-content">
+          <h3>Konfirmasi Akhiri Ujian</h3>
+          <p>Apakah Anda yakin ingin mengakhiri ujian?</p>
+          <p style="color: #666; margin: 15px 0">
+            Soal yang sudah dijawab: <span id="soalTerjawab">0</span> / 100
+          </p>
+          <div>
+            <button class="btn btn-sebelumnya" onclick="batalkanAkhiri()">
+              Batal
+            </button>
+            <button
+              class="btn"
+              style="background: #dc3545; color: white"
+              onclick="konfirmasiAkhiri()"
+            >
+              Ya, Akhiri Ujian
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Waktu Habis -->
+      <div class="modal" id="modalWaktuHabis">
+        <div class="modal-content">
+          <h3>⏰ Waktu Habis!</h3>
+          <p>Ujian telah berakhir. Jawaban Anda akan otomatis tersimpan.</p>
+          <button class="btn btn-selanjutnya" onclick="lihatHasil()">
+            Lihat Hasil
+          </button>
+        </div>
+      </div>
+      <div class="modal" id="modalHasil">
+        <div class="modal-content hasil-container">
+          <h3>📊 Hasil Ujian CAT CPNS</h3>
+          <div class="hasil-info">
+            <div class="hasil-item">
+              <span>Nama Peserta</span>
+              <strong>Peserta CAT</strong>
+            </div>
+            <div class="hasil-item">
+              <span>No. Peserta</span>
+              <strong>CPNS2024001</strong>
+            </div>
+            <div class="hasil-item">
+              <span>Tanggal</span>
+              <strong id="tanggalUjian"></strong>
+            </div>
+          </div>
+
+          <div class="skor-container">
+            <div class="skor-item">
+              <div class="skor-label">Jawaban Benar</div>
+              <div class="skor-value benar" id="skorBenar">0</div>
+            </div>
+            <div class="skor-item">
+              <div class="skor-label">Jawaban Salah</div>
+              <div class="skor-value salah" id="skorSalah">0</div>
+            </div>
+            <div class="skor-item">
+              <div class="skor-label">Tidak Dijawab</div>
+              <div class="skor-value kosong" id="skorKosong">0</div>
+            </div>
+            <div class="skor-item total">
+              <div class="skor-label">Nilai Akhir</div>
+              <div class="skor-value" id="skorTotal">0</div>
+            </div>
+          </div>
+
+          <div class="detail-jawaban">
+            <h4>Detail Jawaban</h4>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Jawaban Anda</th>
+                    <th>Kunci Jawaban</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="detailJawabanBody">
+                  <!-- Akan diisi JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <button class="btn btn-selanjutnya" onclick="tutupHasil()">
+            Tutup
+          </button>
+        </div>
+      </div>
+      <!-- Modal Penjelasan Detail -->
+      <div class="modal" id="modalPenjelasan">
+        <div class="modal-content penjelasan-container">
+          <h3>📝 Penjelasan Jawaban</h3>
+
+          <div class="penjelasan-section">
+            <h4>Soal:</h4>
+            <p id="penjelasanSoal" class="soal-text"></p>
+          </div>
+
+          <div class="penjelasan-section">
+            <h4>Status Jawaban Anda:</h4>
+            <div id="penjelasanStatus"></div>
+          </div>
+
+          <div class="penjelasan-section">
+            <h4>Jawaban Benar:</h4>
+            <p id="penjelasanJawaban" class="jawaban-benar"></p>
+          </div>
+
+          <div class="penjelasan-section">
+            <h4>Penjelasan:</h4>
+            <div id="penjelasanTeks" class="penjelasan-text"></div>
+          </div>
+
+          <button class="btn btn-selanjutnya" onclick="tutupPenjelasan()">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
